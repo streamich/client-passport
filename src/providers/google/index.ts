@@ -32,31 +32,43 @@ export class GoogleManager implements Manager {
   private authInstance: GApiAuth2Instance;
   id = 'gapi.auth2';
   isSignedIn: boolean;
-  user: User;
-  onstatus = noop;
-  onuser = noop;
+  user: User | null = null;
+  onchange = noop;
 
   constructor (authInstance: GApiAuth2Instance) {
     this.authInstance = authInstance;
     this.isSignedIn = authInstance.isSignedIn.get();
-    this.user = new GoogleUser(this, authInstance.currentUser.get());
+    if (this.isSignedIn) {
+      this.user = new GoogleUser(this, authInstance.currentUser.get());
+    }
     authInstance.isSignedIn.listen(this.onIsSignedIn);
     authInstance.currentUser.listen(this.onUser);
   }
   
   private onIsSignedIn = (isSignedIn: boolean) => {
-    this.isSignedIn = isSignedIn;
-    this.onstatus(isSignedIn);
+    if (isSignedIn) {
+      // Don't do anything here, because this case will be handled by
+      // this.onCurrentUser method. To prevent double re-render.
+    } else {
+      this.isSignedIn = false;
+      this.user = null;
+      this.onchange(null);
+    }
   };
 
   private onUser = (gapiUser: GApiAuth2User) => {
-    this.user = new GoogleUser(this, gapiUser);
-    this.onuser(this.user);
+    // Only handle the case when user signs in. The other case should
+    // be handled by this.onIsSignedIn. To prevent double re-render.
+    if (gapiUser.isSignedIn()) {
+      this.isSignedIn = true;
+      this.user = new GoogleUser(this, gapiUser);
+      this.onchange(this.user);
+    }
   };
 
   signIn = async () => {
-    const gapiUser = await this.authInstance.signIn();
-    return this.user;
+    await this.authInstance.signIn();
+    return this.user!;
   };
 
   signOut = async () => {

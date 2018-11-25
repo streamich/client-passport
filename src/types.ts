@@ -13,6 +13,7 @@ export interface AuthenticatorOptions {
 }
 
 export interface IAuthenticator {
+  onchange: (user: User | null) => void;
   load(): Promise<void>;
   signIn: (alias: string) => Promise<User>;
   signOut: () => Promise<void>;

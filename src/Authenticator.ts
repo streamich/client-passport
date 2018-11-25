@@ -1,11 +1,15 @@
 import {IAuthenticator, AuthenticatorOptions} from './types';
 import {Manager} from './providers/types';
 
+const noop = (() => {}) as any;
+
 class Authenticator implements IAuthenticator {
   private options: AuthenticatorOptions;
   // Active provider alias.
   private alias = '';
   private managers: {[alias: string]: Manager} = {};
+
+  onchange = noop;
 
   constructor (options: AuthenticatorOptions) {
     this.options = options;
@@ -42,9 +46,8 @@ class Authenticator implements IAuthenticator {
   };
 
   signOut = async () => {
-    if (!this.alias) return;
-    const manager = this.managers[this.alias];
-    await manager.signOut();
+    const manager = this.manager;
+    if (manager) await manager.signOut();
   };
 
   get manager (): Manager | null {
@@ -68,6 +71,7 @@ class Authenticator implements IAuthenticator {
     const {loader, options} = providerFactory;
     const provider = await loader();
     manager = await provider.createManager(options);
+    manager.onchange = this.onchange;
 
     this.managers[alias] = manager;
     

@@ -17,9 +17,8 @@ export interface Provider<Options> {
 export interface Manager {
   id: string; // e.g. 'gapi.auth2'
   isSignedIn: boolean;
-  user: User;
-  onstatus: (isSignedIn: boolean) => void;
-  onuser: (user: User) => void;
+  user: User | null;
+  onchange: (user?: User) => void;
   signIn: () => Promise<User>;
   signOut: () => Promise<void>;
 }
