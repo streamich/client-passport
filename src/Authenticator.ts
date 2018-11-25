@@ -1,10 +1,10 @@
 import {IAuthenticator, AuthenticatorOptions} from './types';
-import {Manager} from './types-provider';
+import {Manager} from './providers/types';
 
 class Authenticator implements IAuthenticator {
   private options: AuthenticatorOptions;
   // Active provider alias.
-  private alias: string;
+  private alias: string = '';
   private managers: {[alias: string]: Manager} = {};
 
   constructor (options: AuthenticatorOptions) {
@@ -12,7 +12,7 @@ class Authenticator implements IAuthenticator {
   }
 
   signIn = async (alias: string = this.alias) => {
-    let manager: Manager = this.manager;
+    let manager: Manager | null = this.manager;
 
     // Check if user is logged in, if yes, throw.
     if (manager) {

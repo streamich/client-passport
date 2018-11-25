@@ -1,6 +1,6 @@
-import {ProviderFactory, User, Manager} from './types-provider';
+import {ProviderFactory, User, Manager} from './providers/types';
 
-export * from './types-provider';
+export * from './providers/types';
 
 export interface SessionManager {
   save: (providerAlias: string) => Promise<void>;

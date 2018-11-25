@@ -2,11 +2,12 @@ import {
   ProviderFactory,
   Provider,
   Manager,
-  User
-} from '../../types';
+  User,
+  ProviderLoader,
+  CreateProviderFactory,
+} from '../types';
 import {getGapi, getGapiAuth2} from './gapi';
 import {GApiAuth2, GApiAuth2InitOptions, GApiAuth2Instance, GApiAuth2User, GApiAuth2BasicProfile} from './types';
-import {ProviderLoader, CreateProviderFactory} from '../../types-provider';
 
 export interface GoogleOptions extends GApiAuth2InitOptions {
 }
