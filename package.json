@@ -23,7 +23,7 @@
     "precommit": "pretty-quick --staged && yarn tslint",
     "tslint": "tslint 'src/**/*.{js,jsx,ts,tsx}' -t verbose",
     "commitmsg": "commitlint -E GIT_PARAMS",
-    "clean": "rimraf ",
+    "clean": "rimraf lib",
     "build": "tsc",
     "test": "jest --no-cache --config='jest.config.js'",
     "release": "semantic-release"
