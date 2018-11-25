@@ -12,6 +12,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "pretty": true,
+    "jsx": "react",
     "sourceMap": false,
     "strict": true,
     "esModuleInterop": true,
@@ -32,6 +33,7 @@
     "src/__tests__",
     "src/**/__tests__/**/*.*",
     "src/**/__mocks__/**/*.*",
+    "src/**/__story__/**/*.*",
     "*.test.ts",
     "*.spec.ts"
   ]
