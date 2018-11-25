@@ -75,17 +75,13 @@ export class GoogleUser implements User {
   constructor (manager: GoogleManager, gapiUser: GApiAuth2User) {
     this.manager = manager;
     this.payload = gapiUser;
+    
+    this.id = gapiUser.getId();
 
     const basicProfile = gapiUser.getBasicProfile();
-
-    this.id = gapiUser.getId();
-    this.avatar = basicProfile.getImageUrl();
-    this.email = basicProfile.getEmail();
-    this.name = basicProfile.getName();
-  }
-
-  private gp (): GApiAuth2BasicProfile {
-    return this.payload.getBasicProfile();
+    this.avatar = basicProfile ? basicProfile.getImageUrl() : '';
+    this.email = basicProfile ? basicProfile.getEmail() : '';
+    this.name = basicProfile ? basicProfile.getName() : '';
   }
 
   get token (): string {
@@ -103,8 +99,8 @@ export class GoogleUser implements User {
       name: this.name,
       avatar: this.avatar,
       email: this.email,
-      givenName: basicProfile.getGivenName(),
-      familyName: basicProfile.getFamilyName(),
+      givenName: basicProfile ? basicProfile.getGivenName() : '',
+      familyName: basicProfile ? basicProfile.getFamilyName() : '',
       scopes: this.scopes,
     };
   }

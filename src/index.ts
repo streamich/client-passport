@@ -1,9 +1,9 @@
 import Authenticator from './Authenticator';
-import {AuthenticatorOptions, Required} from './types';
+import {AuthenticatorOptions, Required, IAuthenticator} from './types';
 
 export type CreateAuthenticatorOptions = Required<AuthenticatorOptions, 'providers'>;
 
-const createAuthenticator = (opts: CreateAuthenticatorOptions): Authenticator => {
+const createAuthenticator = (opts: CreateAuthenticatorOptions): IAuthenticator => {
   const options: AuthenticatorOptions = {
     providers: opts.providers,
     session: null as any,

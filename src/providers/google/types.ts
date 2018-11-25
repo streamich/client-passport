@@ -32,7 +32,7 @@ export interface GApiAuth2User {
   isSignedIn(): boolean;
   getHostedDomain(): string;
   getGrantedScopes(): string;
-  getBasicProfile(): GApiAuth2BasicProfile;
+  getBasicProfile(): GApiAuth2BasicProfile | undefined;
   getAuthResponse(): GApiAuth2AuthResponse;
   reloadAuthResponse(): Promise<GApiAuth2AuthResponse>;
   hasGrantedScopes(scopes: string): boolean;
