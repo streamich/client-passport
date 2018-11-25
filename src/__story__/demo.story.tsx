@@ -49,6 +49,9 @@ class Demo extends React.Component<any, State> {
   }
 
   onChange = (user) => {
+    if (!this.mounted) return;
+    // tslint:disable-next-line
+    console.info('onChange', user);
     this.setState({user});
   };
 
@@ -62,10 +65,6 @@ class Demo extends React.Component<any, State> {
     this.mounted = true;
     await this.authenticator.load();
     this.setState({loading: false});
-    if (this.authenticator.isSignedIn) {
-      const user = this.authenticator.manager.user;
-      this.setState({user});
-    }
   }
 
   onGoogleSignIn = async () => {

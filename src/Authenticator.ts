@@ -22,9 +22,15 @@ class Authenticator implements IAuthenticator {
 
   async load () {
     const alias = await this.options.session.load();
-    if (!alias) return;
+    if (!alias) {
+      this.onchange(null);
+      return;
+    }
+
     this.alias = alias;
-    await this.getManager(alias);
+    const manager = await this.getManager(alias);
+    this.onchange(manager.isSignedIn
+      ? manager.user : null);
   }
 
   signIn = async (alias: string = this.alias) => {
