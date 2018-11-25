@@ -6,18 +6,19 @@ import {
 } from '../../types';
 import {getGapi, getGapiAuth2} from './gapi';
 import {GApiAuth2, GApiAuth2InitOptions, GApiAuth2Instance, GApiAuth2User, GApiAuth2BasicProfile} from './types';
+import {ProviderLoader, CreateProviderFactory} from '../../types-provider';
 
-export const Google: ProviderFactory = {
-  load: async() => {
-    await getGapi();
-    const auth2 = await getGapiAuth2();
-    const provider = new GoogleProvider(auth2);
-
-    return provider;
-  },
+export const loader: ProviderLoader = async() => {
+  await getGapi();
+  const auth2 = await getGapiAuth2();
+  const provider = new GoogleProvider(auth2);
+  return provider;
 };
 
-export class GoogleProvider implements Provider {
+export interface GoogleOptions extends GApiAuth2InitOptions {
+}
+
+export class GoogleProvider implements Provider<GoogleOptions> {
   auth2: GApiAuth2;
 
   constructor (auth2: GApiAuth2) {
@@ -115,3 +116,15 @@ export class GoogleUser implements User {
     };
   }
 }
+
+const createGoogleProviderFactory: CreateProviderFactory<GoogleOptions> = (optionsOrClientId: GoogleOptions | string) => {
+  const options: GoogleOptions = typeof optionsOrClientId === 'string'
+    ? ({client_id: optionsOrClientId} as GoogleOptions)
+    : optionsOrClientId;
+  return {
+    loader,
+    options,
+  };
+};
+
+export default createGoogleProviderFactory;
