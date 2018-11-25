@@ -25,9 +25,15 @@ class Demo extends React.Component<any, State> {
   }
 
   async componentDidMount ()  {
-    const res = await this.authenticator.getManager('google');
-    // console.log('is', res.isSignedIn);
+    await this.authenticator.load();
+    this.setState({loading: false});
+    console.log('is in', this.authenticator.isSignedIn);
   }
+
+  onGoogleSignIn = async () => {
+    const user = await this.authenticator.signIn('google');
+    console.log('user', user);
+  };
 
   render () {
     if (this.state.loading) {
@@ -40,9 +46,11 @@ class Demo extends React.Component<any, State> {
 
     return (
       <div>
-        Login demo!
+        <div>
+          {/* <img src={this.} /> */}
+        </div>
 
-        <button>Sign in with Google!</button>
+        <button onClick={this.onGoogleSignIn}>Sign in with Google!</button>
       </div>
     );
   }

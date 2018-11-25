@@ -13,12 +13,14 @@ export interface AuthenticatorOptions {
 }
 
 export interface IAuthenticator {
+  load(): Promise<void>;
   signIn: (alias: string) => Promise<User>;
   signOut: () => Promise<void>;
   // Returns active manager, if any.
   manager: Manager | null;
   // Returns active manager or tries to use existing one or create one.
   getManager(alias: string): Promise<Manager>;
+  isSignedIn: boolean;
 }
 
 export type Required<T, K extends keyof T> = Partial<T> & Pick<T, K>;

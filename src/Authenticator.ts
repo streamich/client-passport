@@ -11,6 +11,18 @@ class Authenticator implements IAuthenticator {
     this.options = options;
   }
 
+  private async setAlias (alias: string) {
+    this.alias = alias;
+    await this.options.session.save(alias);
+  }
+
+  async load () {
+    const alias = await this.options.session.load();
+    if (!alias) return;
+    this.alias = alias;
+    await this.getManager(alias);
+  }
+
   signIn = async (alias: string = this.alias) => {
     let manager: Manager | null = this.manager;
 
@@ -24,7 +36,7 @@ class Authenticator implements IAuthenticator {
     }
 
     const user = await manager.signIn();
-    this.alias = alias;
+    await this.setAlias(alias);
 
     return user;
   };
@@ -38,6 +50,11 @@ class Authenticator implements IAuthenticator {
   get manager (): Manager | null {
     if (!this.alias) return null;
     return this.managers[this.alias];
+  }
+
+  get isSignedIn (): boolean {
+    const manager = this.manager;
+    return manager ? manager.isSignedIn : false;
   }
 
   async getManager (alias: string = this.alias): Promise<Manager> {
