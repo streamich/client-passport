@@ -17,3 +17,5 @@ export interface IAuthenticator {
   signOut: () => Promise<void>;
   manager: Manager | null;
 }
+
+export type Required<T, K extends keyof T> = Partial<T> & Pick<T, K>;
