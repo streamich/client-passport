@@ -68,7 +68,7 @@ class Authenticator implements IAuthenticator {
     if (!providerFactory) {
       throw new Error(`ProviderFactory "${alias}" not specified.`);
     }
-    const {loader, options} = providerFactory;
+    const {loader, options} = await providerFactory();
     const provider = await loader();
     manager = await provider.createManager(options);
     manager.onchange = this.onchange;

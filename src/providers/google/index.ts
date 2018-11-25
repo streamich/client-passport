@@ -124,15 +124,3 @@ export const loader: ProviderLoader = async() => {
   const provider = new GoogleProvider(auth2);
   return provider;
 };
-
-const createGoogleProviderFactory: CreateProviderFactory<GoogleOptions> = (optionsOrClientId: GoogleOptions | string) => {
-  const options: GoogleOptions = typeof optionsOrClientId === 'string'
-    ? ({client_id: optionsOrClientId} as GoogleOptions)
-    : optionsOrClientId;
-  return {
-    loader,
-    options,
-  };
-};
-
-export default createGoogleProviderFactory;

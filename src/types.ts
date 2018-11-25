@@ -3,12 +3,12 @@ import {ProviderFactory, User, Manager} from './providers/types';
 export * from './providers/types';
 
 export interface SessionManager {
-  save: (providerAlias: string) => Promise<void>;
+  save: (alias: string) => Promise<void>;
   load: () => Promise<string>;
 }
 
 export interface AuthenticatorOptions {
-  providers: {[alias: string]: ProviderFactory<any>};
+  providers: {[alias: string]: ((() => Promise<ProviderFactory<any>>) | (() => ProviderFactory<any>))};
   session: SessionManager;
 }
 

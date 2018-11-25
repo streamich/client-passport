@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {storiesOf} from '@storybook/react';
 import {passport} from '..';
-import google from '../providers/google';
 import {IAuthenticator} from '../types';
 import {User} from '../providers/types';
 
@@ -20,8 +19,29 @@ class Demo extends React.Component<any, State> {
     super(props);
     this.authenticator = passport({
       providers: {
-        google: google({
+        /*
+        google: () => Promise.resolve(google({
           client_id: '305188012168-htfit0k0u4vegn0f6hn10rcqoj1m77ca.apps.googleusercontent.com',
+        })),
+        */
+       /*
+        google: () => google({
+          client_id: '305188012168-htfit0k0u4vegn0f6hn10rcqoj1m77ca.apps.googleusercontent.com',
+        }),
+        */
+       /*
+        google: async () => {
+          const google = (await import('../providers/google')).default;
+          return google({
+            client_id: '305188012168-htfit0k0u4vegn0f6hn10rcqoj1m77ca.apps.googleusercontent.com',
+          });
+        },
+       */
+        google: async () => ({
+          loader: (await import('../providers/google')).loader,
+          options: {
+            client_id: '305188012168-htfit0k0u4vegn0f6hn10rcqoj1m77ca.apps.googleusercontent.com',
+          },
         }),
       }
     });
