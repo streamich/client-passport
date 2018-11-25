@@ -9,9 +9,10 @@ export const getGapi = async (): Promise<GApi> => {
 
   await new Promise(resolve => {
     const gapicallback = `__gapicb${Date.now().toString(36)}`;
-    (window as any)[gapicallback] = () => {
-      delete (window as any)[gapicallback];
-      gapiCache = (window as any).gapi;
+    const wnd = window as any;
+    wnd[gapicallback] = () => {
+      delete wnd[gapicallback];
+      gapiCache = wnd.gapi;
       resolve();
     };
 
