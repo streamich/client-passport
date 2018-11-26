@@ -1,5 +1,5 @@
 import {loadFBSdk} from './fb';
-import {FBSdk, FBInitOptions, FBLoginStatusResponse} from './types';
+import {FBSdk, FBInitOptions, FBLoginStatusResponse, FBSdkSubscribeEvent} from './types';
 import {Provider, ProviderLoader, Manager, User} from '../types';
 
 export interface FacebookOptions extends FBInitOptions {
@@ -10,8 +10,9 @@ export class FacebookProvider implements Provider<FacebookOptions> {
   constructor (fb: FBSdk) {
     this.fb = fb;
   }
-  createManager (options: FacebookOptions) {
+  async createManager (options: FacebookOptions) {
     const manager = new FacebookManager(this.fb, options);
+    await manager.checkStatus();
     return manager;
   }
 }
@@ -77,6 +78,13 @@ export class FacebookManager implements Manager {
     return user;
   }
 
+  async checkStatus (): Promise<void> {
+    const response = await new Promise<FBLoginStatusResponse>(resolve => {
+      this.fb.getLoginStatus(resolve);
+    });
+    await this.processAuthResponse(response);
+  }
+
   onStatusChange = async (authResponse: FBLoginStatusResponse) => {
     await this.processAuthResponse(authResponse);
   };
@@ -94,7 +102,6 @@ export class FacebookManager implements Manager {
 
   signOut = async () => {
     const response = await new Promise<FBLoginStatusResponse>(resolve => this.fb.logout(resolve));
-    console.log('sign out', response);
     await this.processAuthResponse(response);
   };
 }

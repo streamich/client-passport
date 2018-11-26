@@ -76,10 +76,6 @@ class Demo extends React.Component<any, State> {
     this.mounted = true;
     await this.authenticator.load();
     this.setState({loading: false});
-
-    // const man = await this.authenticator.getManager('facebook');
-    // const user = await man.signIn();
-    // console.log('usre', user)
   }
 
   onGoogleSignIn = async () => {
@@ -115,6 +111,8 @@ class Demo extends React.Component<any, State> {
               borderRadius: '50%',
               overflow: 'hidden',
             }} />
+            <div>{this.state.user.name}</div>
+            <div>token: {this.state.user.token}</div>
           </div>
         }
 
