@@ -1,6 +1,6 @@
 import {loadFBSdk} from './fb';
 import {FBSdk, FBInitOptions, FBLoginStatusResponse, FBSdkSubscribeEvent} from './types';
-import {Provider, ProviderLoader, Manager, User} from '../types';
+import {Provider, ProviderLoader, Manager, User, UserData} from '../types';
 
 export interface FacebookOptions extends FBInitOptions {
 }
@@ -123,7 +123,15 @@ export class FacebookUser implements User {
   }
 
   toJSON () {
-    return {} as any;
+    return {
+      id: this.id,
+      name: this.name,
+      avatar: this.avatar,
+      email: this.email,
+      givenName: this.payload.userData.first_name,
+      familyName: this.payload.userData.last_name,
+      scopes: [],
+    } as UserData;
   }
 }
 
