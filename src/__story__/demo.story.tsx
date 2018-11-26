@@ -3,6 +3,7 @@ import {storiesOf} from '@storybook/react';
 import {passport} from '..';
 import {IAuthenticator} from '../types';
 import {User} from '../providers/types';
+import {loadFBSdk} from '../providers/facebook/fb';
 
 interface State {
   loading: boolean;
@@ -65,6 +66,34 @@ class Demo extends React.Component<any, State> {
     this.mounted = true;
     await this.authenticator.load();
     this.setState({loading: false});
+
+    const fb = await loadFBSdk();
+    fb.init({
+      appId: '253302651812049',
+      autoLogAppEvents: true,
+      xfbml: true,
+      version: 'v3.2',
+    });
+    /*
+    fb.getLoginStatus((response) => {
+      console.log('resp', response.status);
+    });
+    */
+    // /*
+    setTimeout(() => {
+      FB.login(function(response) {
+        console.log('res', response)
+        if (response.authResponse) {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', function(response) {
+          console.log('Good to see you, ' + response.name + '.');
+        });
+        } else {
+        console.log('User cancelled login or did not fully authorize.');
+        }
+      });
+    }, 1000);
+    // */
   }
 
   onGoogleSignIn = async () => {
