@@ -46,16 +46,12 @@ export class FacebookManager implements Manager {
   constructor (fb: FBSdk, options: FacebookOptions) {
     this.fb = fb;
     fb.init(options);
-
-    // fb.Event.subscribe('auth.statusChange', this.onStatusChange);
-    // fb.Event.subscribe('auth.authResponseChange', this.onAuthResponseChange);
-
     const authResponse = fb.getAuthResponse();
     // tslint:disable-next-line
     this.processAuthResponse(authResponse).catch(error => console.error(error));
   }
 
-  private async processAuthResponse (response: FBLoginStatusResponse): Promise<FacebookUser> {
+  private async processAuthResponse (response?: FBLoginStatusResponse): Promise<FacebookUser | null> {
     if (!response || (response.status !== 'connected')) {
       this.isSignedIn = false;
       this.user = null;
@@ -85,24 +81,18 @@ export class FacebookManager implements Manager {
     await this.processAuthResponse(response);
   }
 
-  onStatusChange = async (authResponse: FBLoginStatusResponse) => {
-    await this.processAuthResponse(authResponse);
-  };
-
-  onAuthResponseChange = async (authResponse) => {
-    await this.processAuthResponse(authResponse);
-  };
-
   signIn = async () => {
     const response = await new Promise<FBLoginStatusResponse>(resolve => {
       this.fb.login(response => resolve(response));
     });
-    return await this.processAuthResponse(response);
+    return (await this.processAuthResponse(response)) as FacebookUser;
   };
 
   signOut = async () => {
-    const response = await new Promise<FBLoginStatusResponse>(resolve => this.fb.logout(resolve));
-    await this.processAuthResponse(response);
+    try {
+      this.fb.logout(noop);
+    } catch {}
+    await this.processAuthResponse();
   };
 }
 
@@ -115,20 +105,20 @@ export class FacebookUser implements User {
   id: string;
   token: string;
   name: string;
-  email: string | undefined;
+  email: string;
   avatar: string;
   scopes: string[] = [];
   
-  constructor (manager: FacebookManager, userData: FacebookUserData, authResponse: FBLoginStatusResponse) {
+  constructor (manager: FacebookManager, userData: FacebookUserData, status: FBLoginStatusResponse) {
     this.manager = manager;
     this.payload = {
       userData,
-      authResponse,
+      authResponse: status,
     };
-    this.id = authResponse.authResponse.userID;
-    this.token = authResponse.authResponse.accessToken;
+    this.id = status.authResponse!.userID;
+    this.token = status.authResponse!.accessToken;
     this.name = userData.name;
-    this.email = userData.email;
+    this.email = userData.email || '';
     this.avatar = userData.picture.data.url;  
   }
 
