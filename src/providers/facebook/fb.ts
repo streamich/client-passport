@@ -12,7 +12,7 @@ export const loadFBSdk = async (): Promise<FBSdk> => {
       if (d.getElementById(id)) {return;}
       js = d.createElement(s); js.id = id;
       js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
+      (fjs as any).parentNode.insertBefore(js, fjs);
       /* tslint:enable */
     })(document, 'script', 'facebook-jssdk');
   });
