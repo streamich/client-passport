@@ -113,6 +113,7 @@ class Demo extends React.Component<any, State> {
             }} />
             <div>{this.state.user.name}</div>
             <div>token: {this.state.user.token}</div>
+            <pre>{JSON.stringify(this.state.user.toJSON(), null, 4)}</pre>
           </div>
         }
 

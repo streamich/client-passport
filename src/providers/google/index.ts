@@ -101,7 +101,7 @@ export class GoogleUser implements User {
   }
 
   get scopes (): string[] {
-    return this.payload.getGrantedScopes().split(',');
+    return this.payload.getGrantedScopes().split(' ');
   }
 
   toJSON () {
