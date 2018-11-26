@@ -26,7 +26,7 @@ export interface Manager {
 export interface User {
   id: string;
   name: string;
-  token: string; // JWT token.
+  token: string; // JWT token (or some other token).
   email: string; // getter
   avatar: string; // getter
   scopes: string[]; // getter

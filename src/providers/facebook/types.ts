@@ -5,16 +5,18 @@ export interface FBInitOptions {
   version?: string;
 }
 
-export type SubscribeEvent = 'auth.authResponseChange' | 'auth.statusChange';
+export type FBSdkSubscribeEvent = 'auth.authResponseChange' | 'auth.statusChange';
 
 export interface FBSdk {
   init: (options: FBInitOptions) => void;
+  api(path: string, callback: (response: any) => void);
+  api(path: string, options: object, callback: (response: any) => void);
   getLoginStatus: (callback: (response: FBLoginStatusResponse) => void) => void;
   login: (callback: (response: FBLoginStatusResponse) => void) => void;
   logout: (callback: () => void) => void;
   getAuthResponse: () => FBLoginStatusResponse | undefined;
   Event: {
-    subscribe<T>(event: SubscribeEvent, callback: (data: T) => void);
+    subscribe<T>(event: FBSdkSubscribeEvent, callback: (data: T) => void);
   };
 }
 

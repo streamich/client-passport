@@ -41,10 +41,9 @@ class Authenticator implements IAuthenticator {
       if (manager.isSignedIn) {
         throw new Error('User is signed in, signOut before calling signIn.');
       }
-    } else {
-      manager = await this.getManager(alias);
     }
 
+    manager = await this.getManager(alias);
     const user = await manager.signIn();
     await this.setAlias(alias);
 

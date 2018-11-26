@@ -4,6 +4,7 @@ import {passport} from '..';
 import {IAuthenticator} from '../types';
 import {User} from '../providers/types';
 import {loadFBSdk} from '../providers/facebook/fb';
+import {loader as facebookLoader} from '../providers/facebook';
 
 interface State {
   loading: boolean;
@@ -44,6 +45,15 @@ class Demo extends React.Component<any, State> {
             client_id: '305188012168-htfit0k0u4vegn0f6hn10rcqoj1m77ca.apps.googleusercontent.com',
           },
         }),
+        facebook: () => ({
+          loader: facebookLoader,
+          options: {
+            appId: '253302651812049',
+            autoLogAppEvents: true,
+            xfbml: true,
+            version: 'v3.2',
+          }
+        }),
       }
     });
     this.authenticator.onchange = this.onChange;
@@ -67,37 +77,19 @@ class Demo extends React.Component<any, State> {
     await this.authenticator.load();
     this.setState({loading: false});
 
-    const fb = await loadFBSdk();
-    fb.init({
-      appId: '253302651812049',
-      autoLogAppEvents: true,
-      xfbml: true,
-      version: 'v3.2',
-    });
-    /*
-    fb.getLoginStatus((response) => {
-      console.log('resp', response.status);
-    });
-    */
-    // /*
-    setTimeout(() => {
-      FB.login(function(response) {
-        console.log('res', response)
-        if (response.authResponse) {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-          console.log('Good to see you, ' + response.name + '.');
-        });
-        } else {
-        console.log('User cancelled login or did not fully authorize.');
-        }
-      });
-    }, 1000);
-    // */
+    // const man = await this.authenticator.getManager('facebook');
+    // const user = await man.signIn();
+    // console.log('usre', user)
   }
 
   onGoogleSignIn = async () => {
     await this.authenticator.signIn('google');
+  };
+
+  onFacebookSignIn = async () => {
+    const user = await this.authenticator.signIn('facebook');
+    // tslint:disable-next-line
+    console.log('facebook signIn response', user);
   };
 
   onSignOut = async () => {
@@ -126,8 +118,11 @@ class Demo extends React.Component<any, State> {
           </div>
         }
 
+        <hr />
         <br />
         <button onClick={this.onGoogleSignIn}>Sign in with Google!</button>
+        <br />
+        <button onClick={this.onFacebookSignIn}>Sign in with Facebook!</button>
         <br />
         <button onClick={this.onSignOut}>Sign out</button>
       </div>
