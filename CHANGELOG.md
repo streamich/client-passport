@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/streamich/client-passport/compare/v1.0.0...v2.0.0) (2018-11-29)
+
+
+### Features
+
+* 🎸 add .subsribe() method ([2fb0b4f](https://github.com/streamich/client-passport/commit/2fb0b4f))
+
+
+### BREAKING CHANGES
+
+* .onchange listener does not work anymore
+
 # 1.0.0 (2018-11-26)
 
 
