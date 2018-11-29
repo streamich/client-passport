@@ -12,8 +12,10 @@ export interface AuthenticatorOptions {
   session: SessionManager;
 }
 
+export type Listener = (user: User | null) => void;
+
 export interface IAuthenticator {
-  onchange: (user: User | null) => void;
+  subscribe: (listener: Listener) => void;
   load(): Promise<void>;
   signIn: (alias: string) => Promise<User>;
   signOut: () => Promise<void>;
