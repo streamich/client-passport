@@ -1,18 +1,23 @@
-import {IAuthenticator, AuthenticatorOptions} from './types';
-import {Manager} from './providers/types';
-
-const noop = (() => {}) as any;
+import {IAuthenticator, AuthenticatorOptions, Listener} from './types';
+import {Manager, User} from './providers/types';
 
 class Authenticator implements IAuthenticator {
   private options: AuthenticatorOptions;
   // Active provider alias.
   private alias = '';
   private managers: {[alias: string]: Manager} = {};
-
-  onchange = noop;
+  private listeners: Listener[] = [];
 
   constructor (options: AuthenticatorOptions) {
     this.options = options;
+  }
+
+  subscribe = (listener) => {
+    this.listeners.push(listener);
+  };
+
+  emit (user: User | null) {
+    for (const listener of this.listeners) listener(user);
   }
 
   private async setAlias (alias: string) {
@@ -23,13 +28,13 @@ class Authenticator implements IAuthenticator {
   async load () {
     const alias = await this.options.session.load();
     if (!alias) {
-      this.onchange(null);
+      this.emit(null);
       return;
     }
 
     this.alias = alias;
     const manager = await this.getManager(alias);
-    this.onchange(manager.isSignedIn
+    this.emit(manager.isSignedIn
       ? manager.user : null);
   }
 
@@ -76,10 +81,10 @@ class Authenticator implements IAuthenticator {
     const {loader, options} = await providerFactory();
     const provider = await loader();
     manager = await provider.createManager(options);
-    manager.onchange = this.onchange;
+    manager.onchange = user => this.emit(user || null);
 
     this.managers[alias] = manager;
-    
+
     return manager;
   }
 }

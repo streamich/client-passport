@@ -37,7 +37,7 @@ class Demo extends React.Component<any, State> {
         }),
       }
     });
-    this.authenticator.onchange = this.onChange;
+    this.authenticator.subscribe(this.onChange);
   }
 
   onChange = (user) => {
