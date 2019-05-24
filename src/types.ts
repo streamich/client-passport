@@ -8,7 +8,7 @@ export interface SessionManager {
 }
 
 export interface AuthenticatorOptions {
-  providers: {[alias: string]: ((() => Promise<ProviderFactory<any>>) | (() => ProviderFactory<any>))};
+  providers: {[alias: string]: (() => Promise<ProviderFactory<any>>) | (() => ProviderFactory<any>)};
   session: SessionManager;
 }
 

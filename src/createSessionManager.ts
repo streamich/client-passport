@@ -1,4 +1,4 @@
-import {SessionManager} from "./types";
+import {SessionManager} from './types';
 
 const createSessionManager = (key: string = '__client_passport'): SessionManager => {
   return {

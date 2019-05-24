@@ -8,7 +8,7 @@ class Authenticator implements IAuthenticator {
   private managers: {[alias: string]: Manager} = {};
   private listeners: Listener[] = [];
 
-  constructor (options: AuthenticatorOptions) {
+  constructor(options: AuthenticatorOptions) {
     this.options = options;
   }
 
@@ -16,16 +16,16 @@ class Authenticator implements IAuthenticator {
     this.listeners.push(listener);
   };
 
-  emit (user: User | null) {
+  emit(user: User | null) {
     for (const listener of this.listeners) listener(user);
   }
 
-  private async setAlias (alias: string) {
+  private async setAlias(alias: string) {
     this.alias = alias;
     await this.options.session.save(alias);
   }
 
-  async load () {
+  async load() {
     const alias = await this.options.session.load();
     if (!alias) {
       this.emit(null);
@@ -34,8 +34,7 @@ class Authenticator implements IAuthenticator {
 
     this.alias = alias;
     const manager = await this.getManager(alias);
-    this.emit(manager.isSignedIn
-      ? manager.user : null);
+    this.emit(manager.isSignedIn ? manager.user : null);
   }
 
   signIn = async (alias: string = this.alias) => {
@@ -60,17 +59,17 @@ class Authenticator implements IAuthenticator {
     if (manager) await manager.signOut();
   };
 
-  get manager (): Manager | null {
+  get manager(): Manager | null {
     if (!this.alias) return null;
     return this.managers[this.alias];
   }
 
-  get isSignedIn (): boolean {
+  get isSignedIn(): boolean {
     const manager = this.manager;
     return manager ? manager.isSignedIn : false;
   }
 
-  async getManager (alias: string = this.alias): Promise<Manager> {
+  async getManager(alias: string = this.alias): Promise<Manager> {
     let manager: Manager = this.managers[alias];
     if (manager) return manager;
 
@@ -81,7 +80,7 @@ class Authenticator implements IAuthenticator {
     const {loader, options} = await providerFactory();
     const provider = await loader();
     manager = await provider.createManager(options);
-    manager.onchange = user => this.emit(user || null);
+    manager.onchange = (user) => this.emit(user || null);
 
     this.managers[alias] = manager;
 
