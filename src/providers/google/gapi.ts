@@ -1,4 +1,4 @@
-import {GApi, GApiAuth2, GApiAuth2InitOptions} from "./types";
+import {GApi, GApiAuth2, GApiAuth2InitOptions} from './types';
 
 let gapiCache: GApi;
 
@@ -7,7 +7,7 @@ export const getGapi = async (): Promise<GApi> => {
     return gapiCache;
   }
 
-  await new Promise(resolve => {
+  await new Promise((resolve) => {
     const gapicallback = `__gapicb${Date.now().toString(36)}`;
     const wnd = window as any;
     wnd[gapicallback] = () => {
@@ -34,7 +34,7 @@ export const getGapiAuth2 = async (): Promise<GApiAuth2> => {
 
   const gapi = await getGapi();
 
-  await new Promise(resolve => {
+  await new Promise((resolve) => {
     gapi.load('auth2', () => {
       gapiAuth2Cache = gapi.auth2;
       resolve();

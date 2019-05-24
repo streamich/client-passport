@@ -16,7 +16,7 @@ class Demo extends React.Component<any, State> {
   };
   authenticator: IAuthenticator;
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.authenticator = passport({
       providers: {
@@ -33,9 +33,9 @@ class Demo extends React.Component<any, State> {
             autoLogAppEvents: true,
             xfbml: true,
             version: 'v3.2',
-          }
+          },
         }),
-      }
+      },
     });
     this.authenticator.subscribe(this.onChange);
   }
@@ -49,11 +49,11 @@ class Demo extends React.Component<any, State> {
 
   mounted = false;
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.mounted = false;
   }
 
-  async componentDidMount ()  {
+  async componentDidMount() {
     this.mounted = true;
     await this.authenticator.load();
     this.setState({loading: false});
@@ -73,30 +73,29 @@ class Demo extends React.Component<any, State> {
     await this.authenticator.signOut();
   };
 
-  render () {
+  render() {
     if (this.state.loading) {
-      return (
-        <div>
-          Loading...
-        </div>
-      );
+      return <div>Loading...</div>;
     }
 
     return (
       <div>
-        {this.state.user &&
+        {this.state.user && (
           <div>
-            <img src={this.state.user.avatar} style={{
-              width: 50,
-              height: 50,
-              borderRadius: '50%',
-              overflow: 'hidden',
-            }} />
+            <img
+              src={this.state.user.avatar}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: '50%',
+                overflow: 'hidden',
+              }}
+            />
             <div>{this.state.user.name}</div>
             <div>token: {this.state.user.token}</div>
             <pre>{JSON.stringify(this.state.user.toJSON(), null, 4)}</pre>
           </div>
-        }
+        )}
 
         <hr />
         <br />
@@ -110,5 +109,4 @@ class Demo extends React.Component<any, State> {
   }
 }
 
-storiesOf('Client Passport|Demo', module)
-  .add('Default', () => <Demo />);
+storiesOf('Client Passport|Demo', module).add('Default', () => <Demo />);
