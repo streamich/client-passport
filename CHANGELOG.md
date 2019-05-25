@@ -1,3 +1,12 @@
+# [2.1.0](https://github.com/streamich/client-passport/compare/v2.0.0...v2.1.0) (2019-05-25)
+
+
+### Features
+
+* 🎸 add session provider ([3219ee7](https://github.com/streamich/client-passport/commit/3219ee7))
+* 🎸 allow to supply partial user object on session change ([13fb0c3](https://github.com/streamich/client-passport/commit/13fb0c3))
+* 🎸 integrate session provider into Authenticator ([3276fba](https://github.com/streamich/client-passport/commit/3276fba))
+
 # [2.0.0](https://github.com/streamich/client-passport/compare/v1.0.0...v2.0.0) (2018-11-29)
 
 
