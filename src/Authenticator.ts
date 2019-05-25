@@ -80,7 +80,12 @@ class Authenticator implements IAuthenticator {
     const {loader, options} = await providerFactory();
     const provider = await loader();
     manager = await provider.createManager(options);
-    manager.onchange = (user) => this.emit(user || null);
+    manager.onchange = async (user) => {
+      if (this.alias !== alias) {
+        await this.setAlias(alias);
+      }
+      this.emit(user || null);
+    };
 
     this.managers[alias] = manager;
 
