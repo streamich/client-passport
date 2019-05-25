@@ -4,6 +4,17 @@ import {passport} from '..';
 import {IAuthenticator} from '../types';
 import {User} from '../providers/types';
 import {loader as facebookLoader} from '../providers/facebook';
+import {loader as sessionLoader, SessionProviderOptions} from '../providers/session';
+
+let listener: any = () => {};
+
+const sessionOptions: SessionProviderOptions = {
+  user$: {
+    subscribe: (newListener) => {
+      listener = newListener;
+    },
+  },
+};
 
 interface State {
   loading: boolean;
@@ -35,9 +46,14 @@ class Demo extends React.Component<any, State> {
             version: 'v3.2',
           },
         }),
+        session: () => ({
+          loader: sessionLoader,
+          options: sessionOptions,
+        }),
       },
     });
     this.authenticator.subscribe(this.onChange);
+    this.authenticator.getManager('session');
   }
 
   onChange = (user) => {
@@ -69,7 +85,16 @@ class Demo extends React.Component<any, State> {
     console.log('facebook signIn response', user);
   };
 
+  onSessionSignIn = async () => {
+    listener({
+      name: 'Session User',
+      token: '123',
+    });
+  };
+
   onSignOut = async () => {
+    // tslint:disable-next-line
+    console.log('onSignOut click...');
     await this.authenticator.signOut();
   };
 
@@ -102,6 +127,8 @@ class Demo extends React.Component<any, State> {
         <button onClick={this.onGoogleSignIn}>Sign in with Google!</button>
         <br />
         <button onClick={this.onFacebookSignIn}>Sign in with Facebook!</button>
+        <br />
+        <button onClick={this.onSessionSignIn}>Sign in with Session!</button>
         <br />
         <button onClick={this.onSignOut}>Sign out</button>
       </div>

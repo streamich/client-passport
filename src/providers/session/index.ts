@@ -1,4 +1,17 @@
+// Shim async iterator symbol, necessary for TypeScript so that
+// iterators it returns from async generator functions have this
+// symbol. `try-catch` is for tests, otherwise they throw.
+try {
+  (Symbol as any).asyncIterator = Symbol.asyncIterator || Symbol.for('Symbol.asyncIterator');
+} catch {}
+
 import {ProviderLoader, Provider, Manager, User} from '../types';
+
+export interface SessionProviderOptions {
+  user$: {
+    subscribe: (listener: (user: Partial<User> | null) => void) => void;
+  };
+}
 
 const createSessionUser = (manager: Manager, partialUser: Partial<User>): User => {
   const {avatar = '', email = '', id = '', name = '', payload = {}, scopes = [], token = ''} = partialUser;
@@ -44,17 +57,17 @@ const createSessionManager = (options: SessionProviderOptions): Manager => {
     signOut,
   };
 
-  options.onuser = (partialUser) => {
-    manager.user = createSessionUser(manager, partialUser);
-    manager.onchange(manager.user);
-  };
+  options.user$.subscribe((partialUser) => {
+    if (partialUser) {
+      manager.user = createSessionUser(manager, partialUser);
+      manager.onchange(manager.user);
+    } else {
+      signOut();
+    }
+  });
 
   return manager;
 };
-
-export interface SessionProviderOptions {
-  onuser: (partialUser: Partial<User>) => void;
-}
 
 const sessionProvider: Provider<SessionProviderOptions> = {
   createManager: async (options) => {
