@@ -1,25 +1,29 @@
 import {ProviderLoader, Provider, Manager, User} from '../types';
 
-const createSessionUser = (manager: Manager, token: string): User => ({
-  avatar: '',
-  email: '',
-  id: '',
-  manager,
-  name: '',
-  payload: {},
-  scopes: [],
-  token,
-  toJSON: () => ({
-    age: 0,
-    avatar: '',
-    email: '',
-    familyName: '',
-    givenName: '',
-    id: '',
-    name: '',
-    scopes: [],
-  }),
-});
+const createSessionUser = (manager: Manager, partialUser: Partial<User>): User => {
+  const {avatar = '', email = '', id = '', name = '', payload = {}, scopes = [], token = ''} = partialUser;
+
+  return {
+    id,
+    avatar,
+    email,
+    manager,
+    name,
+    payload,
+    scopes,
+    token,
+    toJSON: () => ({
+      id,
+      name,
+      age: 0,
+      avatar,
+      email,
+      familyName: '',
+      givenName: '',
+      scopes,
+    }),
+  };
+};
 
 const createSessionManager = (options: SessionProviderOptions): Manager => {
   const signIn = async () => {
@@ -40,8 +44,8 @@ const createSessionManager = (options: SessionProviderOptions): Manager => {
     signOut,
   };
 
-  options.onToken = (token) => {
-    manager.user = createSessionUser(manager, token);
+  options.onuser = (partialUser) => {
+    manager.user = createSessionUser(manager, partialUser);
     manager.onchange(manager.user);
   };
 
@@ -49,7 +53,7 @@ const createSessionManager = (options: SessionProviderOptions): Manager => {
 };
 
 export interface SessionProviderOptions {
-  onToken: (token: string) => void;
+  onuser: (partialUser: Partial<User>) => void;
 }
 
 const sessionProvider: Provider<SessionProviderOptions> = {
