@@ -28,7 +28,7 @@ const authenticator = passport({
         appId: '00000000000000',
         autoLogAppEvents: true,
         xfbml: true,
-        version: 'v3.2',
+        version: 'v5.0',
       }
     }),
   }
